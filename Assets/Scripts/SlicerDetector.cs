@@ -44,14 +44,8 @@ public class SlicerDetector : MonoBehaviour
         if (slicable.AllowsSlice == false) return;
         try
         {
+            slicable.Slice(transform.position,m_normalVector);
             
-            var sliceHullData = gameObjectToBeSlice.Slice(transform.position, m_normalVector);
-
-            GameObject lowerHull = sliceHullData.CreateLowerHull(gameObjectToBeSlice,m_defaultMaterial);
-            GameObject upperHull = sliceHullData.CreateUpperHull(gameObjectToBeSlice,m_defaultMaterial);
-            
-            slicable.SetupLowerHull(lowerHull);
-            slicable.SetupUpperHull(upperHull);
 
             slicable.Finish();
             var slash = Instantiate(m_slashSVFXPrefab, transform.position, Quaternion.identity);

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnPosition : MonoBehaviour, IMovementDirectionGenerator
+public class SpawnPosition : MonoBehaviour
 {
     [SerializeField] private Vector3 m_spawnDirection;
     // Start is called before the first frame update
@@ -23,7 +23,4 @@ public class SpawnPosition : MonoBehaviour, IMovementDirectionGenerator
     }
 }
 
-public interface IMovementDirectionGenerator
-{
-    Vector3 GenerateDirectionVector();
-}
+
