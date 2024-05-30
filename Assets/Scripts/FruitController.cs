@@ -2,13 +2,13 @@
 using EzySlice;
 using UnityEngine;
 
-internal class FruitController : MonoBehaviour, ISliceable
+internal class FruitController : MonoBehaviour
 {
     public bool AllowsSlice { get; private set; }
     public Transform m_countainer;
     public Material m_defaultMaterial;
 
-    public void SetupLowerHull(GameObject lowerHull)
+    public void SetupHull(GameObject lowerHull)
     {
         var lowerCollider = lowerHull.AddComponent<MeshCollider>();
         lowerCollider.enabled = true;
@@ -41,12 +41,7 @@ internal class FruitController : MonoBehaviour, ISliceable
         script.m_defaultMaterial = m_defaultMaterial;
         lowerHull.transform.parent = m_countainer;
     }
-
-    public void Finish()
-    {
-        gameObject.SetActive(false);
-    }
-
+    
     public void Slice(Vector3 _position, Vector3 _normal)
     {
         var gameObjectToBeSlice = gameObject;
@@ -55,8 +50,10 @@ internal class FruitController : MonoBehaviour, ISliceable
         GameObject lowerHull = sliceHullData.CreateLowerHull(gameObjectToBeSlice,m_defaultMaterial);
         GameObject upperHull = sliceHullData.CreateUpperHull(gameObjectToBeSlice,m_defaultMaterial);
             
-        SetupLowerHull(lowerHull);
-        SetupUpperHull(upperHull);
+        SetupHull(lowerHull);
+        SetupHull(upperHull);
+        
+        gameObject.SetActive(false);
     }
 
     private void Awake()
@@ -77,13 +74,4 @@ internal class FruitController : MonoBehaviour, ISliceable
         yield return new WaitForSeconds(.2f);
         AllowsSlice = true;
     }
-}
-
-internal interface ISliceable
-{
-    bool AllowsSlice { get; }
-    void SetupLowerHull(GameObject lowerHull);
-    void SetupUpperHull(GameObject lowerHull);
-    void Finish();
-    void Slice(Vector3 _position, Vector3 _normal);
 }
