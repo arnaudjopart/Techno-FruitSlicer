@@ -3,7 +3,6 @@ using System.Collections;
 using EzySlice;
 using UnityEngine;
 
-
 public class SlicerDetector : MonoBehaviour
 {
     private Vector3 m_previousPosition;
@@ -43,20 +42,29 @@ public class SlicerDetector : MonoBehaviour
     private void OnTriggerEnter(Collider _other)
     {
         var gameObjectToBeSlice = _other.gameObject;
-        var fruitController = gameObjectToBeSlice.GetComponent<FruitController>();
-        
-        if (fruitController == null) return;
-        if (fruitController.AllowsSlice == false) return;
-        try
-        {
-            var position = m_transform.position;
-            fruitController.Slice(position,m_normalVector);
-            Instantiate(m_slashSVFXPrefab, position, Quaternion.identity);
 
-        }
-        catch (Exception _e)
+        
+        var collidable = gameObjectToBeSlice.GetComponent<CollidableBase>();
+ 
+        if (collidable != null) 
         {
-            Debug.LogWarning(_e.Message);
+            collidable.SaySomething();
+
+            if (collidable.AllowsSlice()) {
+                try
+                {
+                    var position = m_transform.position;
+                    collidable.Slice(position, m_normalVector);
+                    Instantiate(m_slashSVFXPrefab, position, Quaternion.identity);
+
+                }
+                catch (Exception _e)
+                {
+                    Debug.LogWarning(_e.Message);
+                }
+
+            }
+            
         }
     }
     

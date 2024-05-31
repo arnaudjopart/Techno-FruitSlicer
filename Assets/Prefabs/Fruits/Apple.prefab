@@ -147,5 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843c14afefb54f12a8ed6aceae12699a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_countainer: {fileID: 0}
+  m_container: {fileID: 0}
+  m_gameManager: {fileID: 0}
+  m_score: 10
   m_defaultMaterial: {fileID: 2100000, guid: dbd78b3a510fa124aa1011f060812130, type: 2}

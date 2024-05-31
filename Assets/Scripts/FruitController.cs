@@ -1,49 +1,39 @@
 ﻿using System.Collections;
 using EzySlice;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-internal class FruitController : MonoBehaviour
+internal class FruitController : CollidableBase
 {
-    public bool AllowsSlice { get; private set; }
-    public Transform m_countainer;
+    private bool m_allowSlice;
+    [SerializeField] private int m_score=1;
     public Material m_defaultMaterial;
 
-    public void SetupHull(GameObject lowerHull)
+    public void SetupHull(GameObject _hull)
     {
-        var lowerCollider = lowerHull.AddComponent<MeshCollider>();
+        var lowerCollider = _hull.AddComponent<MeshCollider>();
         lowerCollider.enabled = true;
         lowerCollider.convex = true;
-        var rigidBody = lowerHull.AddComponent<Rigidbody>();
+        var rigidBody = _hull.AddComponent<Rigidbody>();
         rigidBody.isKinematic = false;
         rigidBody.AddExplosionForce(300,rigidBody.position,5,0f);
-        lowerHull.layer = 6;
+        _hull.layer = 6;
         rigidBody.AddTorque(new Vector3(0,10,1));
         rigidBody.constraints = RigidbodyConstraints.FreezePositionZ;
-        var script = lowerHull.AddComponent<FruitController>();
-        script.m_countainer = m_countainer;
+        var script = _hull.AddComponent<FruitController>();
+        script.m_container = m_container;
         script.m_defaultMaterial = m_defaultMaterial;
-        lowerHull.transform.parent = m_countainer;
-    }
+        script.m_gameManager = m_gameManager;
+        _hull.transform.parent = m_container;
 
-    public void SetupUpperHull(GameObject lowerHull)
-    {
-        var lowerCollider = lowerHull.AddComponent<MeshCollider>();
-        lowerCollider.enabled = true;
-        lowerCollider.convex = true;
-        var rigidBody = lowerHull.AddComponent<Rigidbody>();
-        rigidBody.isKinematic = false;
-        rigidBody.AddExplosionForce(300,rigidBody.position,5,0);
-        lowerHull.layer = 6;
-        rigidBody.AddTorque(new Vector3(0,10,1));
-        rigidBody.constraints = RigidbodyConstraints.FreezePositionZ;
-        var script = lowerHull.AddComponent<FruitController>();
-        script.m_countainer = m_countainer;
-        script.m_defaultMaterial = m_defaultMaterial;
-        lowerHull.transform.parent = m_countainer;
     }
     
-    public void Slice(Vector3 _position, Vector3 _normal)
+    public override void Slice(Vector3 _position, Vector3 _normal)
     {
+        base.Slice(_position, _normal);
+
+        m_gameManager.AddScore(m_score);
+
         var gameObjectToBeSlice = gameObject;
         var sliceHullData = gameObjectToBeSlice.Slice(_position, _normal);
 
@@ -69,9 +59,20 @@ internal class FruitController : MonoBehaviour
         }
     }
 
+    public override void SaySomething()
+    {
+        //base.SaySomething();
+        Debug.Log("I'm a Fruit");
+    }
+
     private IEnumerator Start()
     {
         yield return new WaitForSeconds(.2f);
-        AllowsSlice = true;
+        m_allowSlice = true;
+    }
+
+    public override bool AllowsSlice()
+    {
+        return m_allowSlice;
     }
 }
